@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/* Design tokens from the product mockup */
+@theme {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-ink: #15181b;
+  --color-ink-70: #4c5560;
+  --color-ink-45: #7c8592;
+  --color-paper: #ffffff;
+  --color-wash: #f4f5f3;
+  --color-wash-2: #ebedea;
+  --color-line: #e3e5e1;
+  --color-line-2: #eceee9;
+  --color-mute: #b6bcb6;
+  --color-accent: #14655a;
+  --color-accent-600: #0f5049;
+  --color-accent-soft: #e7f0ed;
+  --color-accent-line: #bcd6cf;
+  --color-flag: #b0631c;
+  --color-flag-soft: #fbf0e3;
+  --color-flag-line: #eccfa9;
+
+  --shadow-card: 0 1px 2px rgba(21, 24, 27, 0.05);
+  --shadow-lift: 0 4px 16px rgba(21, 24, 27, 0.08);
+  --shadow-modal: 0 18px 48px rgba(21, 24, 27, 0.22);
+
+  --animate-indeterminate: indeterminate 1.2s ease-in-out infinite;
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(250%);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-wash text-ink font-sans text-sm antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-[-0.02em];
+  }
+}
+
+@layer utilities {
+  /* Small uppercase label used for column headers and section kickers */
+  .kicker {
+    @apply text-ink-45 text-[11px] font-semibold tracking-[0.04em] uppercase;
+  }
+}
