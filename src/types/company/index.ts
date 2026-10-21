@@ -1,7 +1,7 @@
 import type { CompanyRole, User } from '../user';
 
 export interface Company {
-  id: number;
+  id: string;
   name: string;
   isActive: boolean;
   createdAt: string;

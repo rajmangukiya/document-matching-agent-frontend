@@ -4,18 +4,18 @@ import Button from '../../../../common-components/button';
 import Input from '../../../../common-components/input';
 import Modal from '../../../../common-components/modal';
 import Textarea from '../../../../common-components/textarea';
-import type { TemplatePayload } from '../../../../types/template';
+import type { DocumentSkeletonPayload } from '../../../../types/document-skeleton';
 import errorUtil, { type FieldErrors } from '../../../../utils/error';
 
-interface SkeletonFormModalProps {
+interface DocumentSkeletonFormModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (payload: TemplatePayload) => Promise<unknown>;
+  onSubmit: (payload: DocumentSkeletonPayload) => Promise<unknown>;
 }
 
 const EMPTY = { title: '', documentType: '', description: '' };
 
-const SkeletonFormModal = ({ open, onClose, onSubmit }: SkeletonFormModalProps) => {
+const DocumentSkeletonFormModal = ({ open, onClose, onSubmit }: DocumentSkeletonFormModalProps) => {
   const [form, setForm] = useState(EMPTY);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState('');
@@ -98,4 +98,4 @@ const SkeletonFormModal = ({ open, onClose, onSubmit }: SkeletonFormModalProps) 
   );
 };
 
-export default SkeletonFormModal;
+export default DocumentSkeletonFormModal;

@@ -4,15 +4,15 @@ import Button from '../../../../common-components/button';
 import Loader from '../../../../common-components/loader';
 import Modal from '../../../../common-components/modal';
 import Tag from '../../../../common-components/tag';
-import type { MatchCandidate, TemplateField } from '../../../../types/template';
+import type { MatchCandidate, DocumentSkeletonField } from '../../../../types/document-skeleton';
 import errorUtil from '../../../../utils/error';
 
 interface MatchModalProps {
-  field: TemplateField | null;
+  field: DocumentSkeletonField | null;
   candidates: MatchCandidate[] | null;
   onClose: () => void;
-  onAdd: (matchFieldId: number) => Promise<unknown>;
-  onRemove: (matchFieldId: number) => Promise<unknown>;
+  onAdd: (matchFieldId: string) => Promise<unknown>;
+  onRemove: (matchFieldId: string) => Promise<unknown>;
 }
 
 const rowClasses = (selected: boolean) =>
@@ -22,16 +22,16 @@ const rowClasses = (selected: boolean) =>
 
 // Two-step picker: choose a skeleton, then one of its fields
 const MatchModal = ({ field, candidates, onClose, onAdd, onRemove }: MatchModalProps) => {
-  const [templateId, setTemplateId] = useState<number | null>(null);
-  const [fieldId, setFieldId] = useState<number | null>(null);
+  const [documentSkeletonId, setDocumentSkeletonId] = useState<string | null>(null);
+  const [fieldId, setFieldId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  const selected = candidates?.find((c) => c.id === templateId) ?? null;
+  const selected = candidates?.find((c) => c.id === documentSkeletonId) ?? null;
   const alreadyMatched = field?.matches.some((m) => m.fieldId === fieldId) ?? false;
 
   const close = () => {
-    setTemplateId(null);
+    setDocumentSkeletonId(null);
     setFieldId(null);
     setError('');
     onClose();
@@ -62,10 +62,10 @@ const MatchModal = ({ field, candidates, onClose, onAdd, onRemove }: MatchModalP
             <div className="mt-3 flex flex-wrap gap-1.5">
               {field.matches.map((m) => (
                 <Tag key={m.fieldId} tone="ok" className="h-6">
-                  {m.templateTitle} · {m.fieldName}
+                  {m.documentSkeletonTitle} · {m.fieldName}
                   <button
                     type="button"
-                    aria-label={`Remove ${m.templateTitle} · ${m.fieldName}`}
+                    aria-label={`Remove ${m.documentSkeletonTitle} · ${m.fieldName}`}
                     className="text-accent-600 hover:text-ink cursor-pointer"
                     onClick={() => void run(() => onRemove(m.fieldId))}
                   >
@@ -117,9 +117,9 @@ const MatchModal = ({ field, candidates, onClose, onAdd, onRemove }: MatchModalP
                 <button
                   key={c.id}
                   type="button"
-                  className={`${rowClasses(c.id === templateId)} flex-col items-start py-[9px]`}
+                  className={`${rowClasses(c.id === documentSkeletonId)} flex-col items-start py-[9px]`}
                   onClick={() => {
-                    setTemplateId(c.id);
+                    setDocumentSkeletonId(c.id);
                     setFieldId(null);
                   }}
                 >

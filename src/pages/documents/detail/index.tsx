@@ -33,7 +33,7 @@ const checkColor = (check: MatchCheck) =>
       : 'text-ink-45';
 
 const DocumentDetailPage = () => {
-  const documentId = Number(useParams().id);
+  const documentId = useParams().id ?? '';
   const { can } = useAuth();
   const { showToast } = useToast();
   const canEdit = can(Permission.MANAGE_DOCUMENT_DATA);
@@ -73,7 +73,7 @@ const DocumentDetailPage = () => {
   const multiTarget = (field: DocumentDetail['fields'][number], check: MatchCheck) =>
     field.checks.filter(
       (x) =>
-        x.targetTemplateTitle === check.targetTemplateTitle &&
+        x.targetDocumentSkeletonTitle === check.targetDocumentSkeletonTitle &&
         x.targetFieldName === check.targetFieldName,
     ).length > 1;
 
@@ -171,7 +171,7 @@ const DocumentDetailPage = () => {
                                 />
                                 <div className="min-w-0 flex-1">
                                   <div className="text-ink-70 text-[12.5px] text-pretty">
-                                    {check.targetTemplateTitle} · {check.targetFieldName}
+                                    {check.targetDocumentSkeletonTitle} · {check.targetFieldName}
                                     {check.targetSegmentName && multiTarget(field, check) && (
                                       <span className="text-ink-45">
                                         {' '}

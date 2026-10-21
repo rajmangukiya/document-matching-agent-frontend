@@ -8,8 +8,8 @@ import DocumentDetailPage from '../pages/documents/detail';
 import JourneyDetailPage from '../pages/journeys/detail';
 import JourneysPage from '../pages/journeys/list';
 import NotFoundPage from '../pages/not-found';
-import SkeletonDetailPage from '../pages/skeletons/detail';
-import SkeletonsPage from '../pages/skeletons/list';
+import DocumentSkeletonDetailPage from '../pages/document-skeletons/detail';
+import DocumentSkeletonsPage from '../pages/document-skeletons/list';
 import UsersPage from '../pages/users';
 import { Permission } from '../types/permission';
 import HomeRedirect from './home-redirect';
@@ -42,8 +42,8 @@ export const router = createBrowserRouter([
               { path: PATHS.JOURNEYS, element: <JourneysPage /> },
               { path: PATHS.JOURNEY, element: <JourneyDetailPage /> },
               { path: PATHS.DOCUMENT, element: <DocumentDetailPage /> },
-              { path: PATHS.SKELETONS, element: <SkeletonsPage /> },
-              { path: PATHS.SKELETON, element: <SkeletonDetailPage /> },
+              { path: PATHS.DOCUMENT_SKELETONS, element: <DocumentSkeletonsPage /> },
+              { path: PATHS.DOCUMENT_SKELETON, element: <DocumentSkeletonDetailPage /> },
               {
                 element: <ProtectedRoute area="company" permission={Permission.MANAGE_USERS} />,
                 children: [{ path: PATHS.USERS, element: <UsersPage /> }],

@@ -22,15 +22,15 @@ class UserService {
     return apiCall.post<User>('/users', payload);
   }
 
-  public update(id: number, payload: UpdateUserPayload): Promise<User> {
+  public update(id: string, payload: UpdateUserPayload): Promise<User> {
     return apiCall.patch<User>(`/users/${id}`, payload);
   }
 
-  public resetPassword(id: number, password: string): Promise<null> {
+  public resetPassword(id: string, password: string): Promise<null> {
     return apiCall.put<null>(`/users/${id}/password`, { password });
   }
 
-  public remove(id: number): Promise<null> {
+  public remove(id: string): Promise<null> {
     return apiCall.delete<null>(`/users/${id}`);
   }
 }

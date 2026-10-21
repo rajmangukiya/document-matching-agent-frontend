@@ -16,15 +16,15 @@ import { useAuth } from '../../../context/auth';
 import { useToast } from '../../../context/toast';
 import useRequest from '../../../hooks/use-request';
 import { PATHS } from '../../../routes/paths';
-import templateService from '../../../services/template';
+import documentSkeletonService from '../../../services/document-skeleton';
 import { Permission } from '../../../types/permission';
 import {
   FIELD_TYPES,
   type FieldType,
   type MatchCandidate,
-  type TemplateDetail,
-  type TemplateField,
-} from '../../../types/template';
+  type DocumentSkeletonDetail,
+  type DocumentSkeletonField,
+} from '../../../types/document-skeleton';
 import errorUtil from '../../../utils/error';
 import formatUtil from '../../../utils/format';
 import MatchModal from '../components/match-modal';
@@ -38,7 +38,7 @@ const FieldNameInput = ({
   field,
   onRename,
 }: {
-  field: TemplateField;
+  field: DocumentSkeletonField;
   onRename: (name: string) => void;
 }) => {
   const [value, setValue] = useState(field.name);
@@ -64,15 +64,18 @@ const FieldNameInput = ({
   );
 };
 
-const SkeletonDetailPage = () => {
-  const templateId = Number(useParams().id);
+const DocumentSkeletonDetailPage = () => {
+  const documentSkeletonId = useParams().id ?? '';
   const location = useLocation();
   const navigate = useNavigate();
   const { can } = useAuth();
   const { showToast } = useToast();
-  const canManage = can(Permission.MANAGE_TEMPLATES);
+  const canManage = can(Permission.MANAGE_DOCUMENT_SKELETONS);
 
-  const template = useRequest(() => templateService.get(templateId), [templateId]);
+  const documentSkeleton = useRequest(
+    () => documentSkeletonService.get(documentSkeletonId),
+    [documentSkeletonId],
+  );
   const [tab, setTab] = useState<Tab>((location.state as { tab?: Tab } | null)?.tab ?? 'fields');
   const [details, setDetails] = useState({ title: '', documentType: '', description: '' });
   const [detailsStatus, setDetailsStatus] = useState<{
@@ -85,12 +88,12 @@ const SkeletonDetailPage = () => {
     type: 'text',
   });
   const [newFieldError, setNewFieldError] = useState('');
-  const [matchFor, setMatchFor] = useState<number | null>(null);
+  const [matchFor, setMatchFor] = useState<string | null>(null);
   const [candidates, setCandidates] = useState<MatchCandidate[] | null>(null);
-  const [removeField, setRemoveField] = useState<TemplateField | null>(null);
+  const [removeField, setRemoveField] = useState<DocumentSkeletonField | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const t = template.data;
+  const t = documentSkeleton.data;
   useEffect(() => {
     if (t)
       setDetails({
@@ -100,12 +103,12 @@ const SkeletonDetailPage = () => {
       });
   }, [t?.id, t?.title, t?.documentType, t?.description]);
 
-  if (template.isLoading) return <Loader fullScreen />;
-  if (template.error || !t)
-    return <Alert variant="error">{errorUtil.getMessage(template.error)}</Alert>;
+  if (documentSkeleton.isLoading) return <Loader fullScreen />;
+  if (documentSkeleton.error || !t)
+    return <Alert variant="error">{errorUtil.getMessage(documentSkeleton.error)}</Alert>;
 
-  const apply = (next: TemplateDetail) => template.setData(next);
-  const run = async (action: () => Promise<TemplateDetail>, success?: string) => {
+  const apply = (next: DocumentSkeletonDetail) => documentSkeleton.setData(next);
+  const run = async (action: () => Promise<DocumentSkeletonDetail>, success?: string) => {
     try {
       apply(await action());
       if (success) showToast(success);
@@ -124,7 +127,7 @@ const SkeletonDetailPage = () => {
     setDetailsStatus(null);
     try {
       apply(
-        await templateService.update(t.id, {
+        await documentSkeletonService.update(t.id, {
           title: details.title.trim(),
           documentType: details.documentType.trim(),
           description: details.description.trim() || null,
@@ -143,7 +146,10 @@ const SkeletonDetailPage = () => {
     setNewFieldError('');
     try {
       apply(
-        await templateService.addField(t.id, { name: newField.name.trim(), type: newField.type }),
+        await documentSkeletonService.addField(t.id, {
+          name: newField.name.trim(),
+          type: newField.type,
+        }),
       );
       setNewField({ name: '', type: newField.type });
     } catch (err) {
@@ -151,10 +157,10 @@ const SkeletonDetailPage = () => {
     }
   };
 
-  const openMatch = (fieldId: number) => {
+  const openMatch = (fieldId: string) => {
     setMatchFor(fieldId);
     if (!candidates) {
-      templateService
+      documentSkeletonService
         .matchCandidates(t.id)
         .then(setCandidates)
         .catch((err) => showToast(errorUtil.getMessage(err), 'error'));
@@ -167,7 +173,10 @@ const SkeletonDetailPage = () => {
   return (
     <div>
       <PageHeader
-        breadcrumbs={[{ label: 'Document skeletons', to: PATHS.SKELETONS }, { label: t.title }]}
+        breadcrumbs={[
+          { label: 'Document skeletons', to: PATHS.DOCUMENT_SKELETONS },
+          { label: t.title },
+        ]}
         title={t.title}
         description={<span className="text-ink-45 font-mono text-xs">{t.documentType}</span>}
         actions={
@@ -266,7 +275,9 @@ const SkeletonDetailPage = () => {
                       <FieldNameInput
                         field={field}
                         onRename={(name) =>
-                          void run(() => templateService.updateField(t.id, field.id, { name }))
+                          void run(() =>
+                            documentSkeletonService.updateField(t.id, field.id, { name }),
+                          )
                         }
                       />
                     ) : (
@@ -281,7 +292,7 @@ const SkeletonDetailPage = () => {
                         options={typeOptions}
                         onChange={(e) =>
                           void run(() =>
-                            templateService.updateField(t.id, field.id, {
+                            documentSkeletonService.updateField(t.id, field.id, {
                               type: e.target.value as FieldType,
                             }),
                           )
@@ -298,9 +309,9 @@ const SkeletonDetailPage = () => {
                           <div key={m.fieldId} className="flex min-w-0 items-center gap-1.5">
                             <span
                               className="min-w-0 flex-1 truncate text-[12.5px]"
-                              title={`${m.templateTitle} · ${m.fieldName}`}
+                              title={`${m.documentSkeletonTitle} · ${m.fieldName}`}
                             >
-                              {m.templateTitle} · {m.fieldName}
+                              {m.documentSkeletonTitle} · {m.fieldName}
                             </span>
                             {canManage && (
                               <button
@@ -309,7 +320,7 @@ const SkeletonDetailPage = () => {
                                 className="text-accent hover:text-ink cursor-pointer px-1 text-[11.5px]"
                                 onClick={() =>
                                   void run(() =>
-                                    templateService.removeMatch(t.id, field.id, m.fieldId),
+                                    documentSkeletonService.removeMatch(t.id, field.id, m.fieldId),
                                   )
                                 }
                               >
@@ -404,10 +415,10 @@ const SkeletonDetailPage = () => {
         candidates={candidates}
         onClose={() => setMatchFor(null)}
         onAdd={async (matchFieldId) =>
-          apply(await templateService.addMatch(t.id, matchFor!, matchFieldId))
+          apply(await documentSkeletonService.addMatch(t.id, matchFor!, matchFieldId))
         }
         onRemove={async (matchFieldId) =>
-          apply(await templateService.removeMatch(t.id, matchFor!, matchFieldId))
+          apply(await documentSkeletonService.removeMatch(t.id, matchFor!, matchFieldId))
         }
       />
       <ConfirmDialog
@@ -416,7 +427,9 @@ const SkeletonDetailPage = () => {
         description="Its match rules and any rules on other skeletons pointing at it are removed too. Documents already in journeys are not affected."
         confirmLabel="Remove field"
         onClose={() => setRemoveField(null)}
-        onConfirm={async () => apply(await templateService.removeField(t.id, removeField!.id))}
+        onConfirm={async () =>
+          apply(await documentSkeletonService.removeField(t.id, removeField!.id))
+        }
       />
       <ConfirmDialog
         open={deleteOpen}
@@ -425,13 +438,13 @@ const SkeletonDetailPage = () => {
         confirmLabel="Delete skeleton"
         onClose={() => setDeleteOpen(false)}
         onConfirm={async () => {
-          await templateService.remove(t.id);
+          await documentSkeletonService.remove(t.id);
           showToast('Skeleton deleted');
-          navigate(PATHS.SKELETONS);
+          navigate(PATHS.DOCUMENT_SKELETONS);
         }}
       />
     </div>
   );
 };
 
-export default SkeletonDetailPage;
+export default DocumentSkeletonDetailPage;

@@ -17,7 +17,7 @@ class JourneyService {
     return apiCall.get<JourneyListItem[]>('/journeys');
   }
 
-  public get(id: number): Promise<JourneyDetail> {
+  public get(id: string): Promise<JourneyDetail> {
     return apiCall.get<JourneyDetail>(`/journeys/${id}`);
   }
 
@@ -25,15 +25,15 @@ class JourneyService {
     return apiCall.post<JourneyDetail>('/journeys', payload);
   }
 
-  public update(id: number, payload: Partial<JourneyPayload>): Promise<JourneyDetail> {
+  public update(id: string, payload: Partial<JourneyPayload>): Promise<JourneyDetail> {
     return apiCall.patch<JourneyDetail>(`/journeys/${id}`, payload);
   }
 
-  public remove(id: number): Promise<null> {
+  public remove(id: string): Promise<null> {
     return apiCall.delete<null>(`/journeys/${id}`);
   }
 
-  public addSegment(id: number, name: string): Promise<JourneyDetail> {
+  public addSegment(id: string, name: string): Promise<JourneyDetail> {
     return apiCall.post<JourneyDetail>(`/journeys/${id}/segments`, { name });
   }
 }

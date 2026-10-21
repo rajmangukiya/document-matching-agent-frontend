@@ -23,7 +23,7 @@ import ResetPasswordModal from '../../../common-components/reset-password-modal'
 const roleOptions = COMPANY_ROLES.map((r) => ({ value: r, label: formatUtil.roleLabel(r) }));
 
 const AdminCompanyPage = () => {
-  const companyId = Number(useParams().id);
+  const companyId = useParams().id ?? '';
   const { showToast } = useToast();
   const company = useRequest(() => adminService.getCompany(companyId), [companyId]);
 

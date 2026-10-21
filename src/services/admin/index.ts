@@ -34,24 +34,24 @@ class AdminService {
     return apiCall.post<Company>('/admin/companies', payload);
   }
 
-  public getCompany(id: number): Promise<CompanyDetail> {
+  public getCompany(id: string): Promise<CompanyDetail> {
     return apiCall.get<CompanyDetail>(`/admin/companies/${id}`);
   }
 
   public updateCompany(
-    id: number,
+    id: string,
     payload: { name?: string; isActive?: boolean },
   ): Promise<Company> {
     return apiCall.patch<Company>(`/admin/companies/${id}`, payload);
   }
 
-  public createUser(companyId: number, payload: CreateUserPayload): Promise<User> {
+  public createUser(companyId: string, payload: CreateUserPayload): Promise<User> {
     return apiCall.post<User>(`/admin/companies/${companyId}/users`, payload);
   }
 
   public updateUser(
-    companyId: number,
-    userId: number,
+    companyId: string,
+    userId: string,
     payload: UpdateCompanyUserPayload,
   ): Promise<User> {
     return apiCall.patch<User>(`/admin/companies/${companyId}/users/${userId}`, payload);

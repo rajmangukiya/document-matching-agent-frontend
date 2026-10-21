@@ -6,17 +6,17 @@ export type CompanyRole = Exclude<UserRole, 'super_admin'>;
 export const COMPANY_ROLES: CompanyRole[] = ['admin', 'skeleton_designer', 'operations', 'viewer'];
 
 export interface User {
-  id: number;
+  id: string;
   username: string;
   role: UserRole;
-  companyId: number | null;
+  companyId: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface SessionUser extends User {
-  company: { id: number; name: string } | null;
+  company: { id: string; name: string } | null;
   permissions: Permission[];
 }
 

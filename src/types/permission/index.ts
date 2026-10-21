@@ -2,8 +2,8 @@
 export const Permission = {
   MANAGE_COMPANIES: 'companies:manage',
   MANAGE_USERS: 'users:manage',
-  VIEW_TEMPLATES: 'templates:view',
-  MANAGE_TEMPLATES: 'templates:manage',
+  VIEW_DOCUMENT_SKELETONS: 'document-skeletons:view',
+  MANAGE_DOCUMENT_SKELETONS: 'document-skeletons:manage',
   VIEW_JOURNEYS: 'journeys:view',
   MANAGE_JOURNEYS: 'journeys:manage',
   MANAGE_DOCUMENT_DATA: 'documents:data',

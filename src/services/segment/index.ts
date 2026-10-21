@@ -14,16 +14,16 @@ class SegmentService {
     return SegmentService.instance;
   }
 
-  public rename(id: number, name: string): Promise<JourneyDetail> {
+  public rename(id: string, name: string): Promise<JourneyDetail> {
     return apiCall.patch<JourneyDetail>(`/segments/${id}`, { name });
   }
 
-  public remove(id: number): Promise<JourneyDetail> {
+  public remove(id: string): Promise<JourneyDetail> {
     return apiCall.delete<JourneyDetail>(`/segments/${id}`);
   }
 
-  public addDocument(id: number, templateId: number): Promise<JourneyDetail> {
-    return apiCall.post<JourneyDetail>(`/segments/${id}/documents`, { templateId });
+  public addDocument(id: string, documentSkeletonId: string): Promise<JourneyDetail> {
+    return apiCall.post<JourneyDetail>(`/segments/${id}/documents`, { documentSkeletonId });
   }
 }
 

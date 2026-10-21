@@ -17,10 +17,10 @@ import { PATHS } from '../../../routes/paths';
 import documentService from '../../../services/document';
 import journeyService from '../../../services/journey';
 import segmentService from '../../../services/segment';
-import templateService from '../../../services/template';
+import documentSkeletonService from '../../../services/document-skeleton';
 import type { DocumentSummary, JourneyDetail, SegmentWithDocuments } from '../../../types/journey';
 import { Permission } from '../../../types/permission';
-import type { TemplateListItem } from '../../../types/template';
+import type { DocumentSkeletonListItem } from '../../../types/document-skeleton';
 import errorUtil from '../../../utils/error';
 import formatUtil from '../../../utils/format';
 import AddDocumentModal from '../components/add-document-modal';
@@ -29,7 +29,7 @@ import SegmentCard from '../components/segment-card';
 import UploadModal from '../components/upload-modal';
 
 const JourneyDetailPage = () => {
-  const journeyId = Number(useParams().id);
+  const journeyId = useParams().id ?? '';
   const navigate = useNavigate();
   const { can } = useAuth();
   const { showToast } = useToast();
@@ -44,9 +44,11 @@ const JourneyDetailPage = () => {
 
   const [newSegment, setNewSegment] = useState('');
   const [segmentError, setSegmentError] = useState('');
-  const [addDocFor, setAddDocFor] = useState<number | null>(null);
-  const [templates, setTemplates] = useState<TemplateListItem[] | null>(null);
-  const [addingId, setAddingId] = useState<number | null>(null);
+  const [addDocFor, setAddDocFor] = useState<string | null>(null);
+  const [documentSkeletons, setDocumentSkeletons] = useState<DocumentSkeletonListItem[] | null>(
+    null,
+  );
+  const [addingId, setAddingId] = useState<string | null>(null);
   const [addError, setAddError] = useState('');
   const [uploadFor, setUploadFor] = useState<DocumentSummary | null>(null);
   const [renameFor, setRenameFor] = useState<SegmentWithDocuments | null>(null);
@@ -75,20 +77,20 @@ const JourneyDetailPage = () => {
     }
   };
 
-  const openAddDocument = (segmentId: number) => {
+  const openAddDocument = (segmentId: string) => {
     setAddDocFor(segmentId);
     setAddError('');
-    templateService
+    documentSkeletonService
       .list()
-      .then(setTemplates)
+      .then(setDocumentSkeletons)
       .catch((err) => setAddError(errorUtil.getMessage(err)));
   };
 
-  const addDocument = async (templateId: number) => {
-    setAddingId(templateId);
+  const addDocument = async (documentSkeletonId: string) => {
+    setAddingId(documentSkeletonId);
     setAddError('');
     try {
-      apply(await segmentService.addDocument(addDocFor!, templateId));
+      apply(await segmentService.addDocument(addDocFor!, documentSkeletonId));
     } catch (err) {
       setAddError(errorUtil.getMessage(err));
     } finally {
@@ -197,10 +199,10 @@ const JourneyDetailPage = () => {
 
       <AddDocumentModal
         segment={j.segments.find((s) => s.id === addDocFor) ?? null}
-        templates={templates}
+        documentSkeletons={documentSkeletons}
         addingId={addingId}
         error={addError}
-        onAdd={(templateId) => void addDocument(templateId)}
+        onAdd={(documentSkeletonId) => void addDocument(documentSkeletonId)}
         onClose={() => setAddDocFor(null)}
       />
       <UploadModal

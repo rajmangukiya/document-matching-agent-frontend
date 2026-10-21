@@ -1,4 +1,4 @@
-import type { FieldType } from '../template';
+import type { FieldType } from '../document-skeleton';
 
 export type DocumentStatus = 'pending' | 'extracting' | 'ready' | 'failed';
 
@@ -22,8 +22,8 @@ export interface DocumentCounts {
 }
 
 export interface UploadedFile {
-  id: number;
-  documentId: number;
+  id: string;
+  documentId: string;
   originalName: string;
   mimeType: string;
   sizeBytes: number;
@@ -31,37 +31,37 @@ export interface UploadedFile {
 }
 
 export interface MatchCheck {
-  targetTemplateTitle: string;
+  targetDocumentSkeletonTitle: string;
   targetFieldName: string;
-  targetDocumentId: number | null;
+  targetDocumentId: string | null;
   targetDocumentTitle: string | null;
-  targetSegmentId: number | null;
+  targetSegmentId: string | null;
   targetSegmentName: string | null;
   value: string | null;
   status: CheckStatus;
 }
 
 export interface FieldRow {
-  id: number;
+  id: string;
   name: string;
   type: FieldType;
   value: string | null;
   isManual: boolean;
   confidence: number | null;
-  sourceFileId: number | null;
+  sourceFileId: string | null;
   sourceFileName: string | null;
   result: FieldResult;
   checks: MatchCheck[];
 }
 
 export interface DocumentDetail {
-  id: number;
+  id: string;
   title: string;
   documentType: string;
   status: DocumentStatus;
-  templateId: number | null;
-  journey: { id: number; title: string };
-  segment: { id: number; name: string };
+  documentSkeletonId: string | null;
+  journey: { id: string; title: string };
+  segment: { id: string; name: string };
   files: UploadedFile[];
   counts: DocumentCounts | null;
   fields: FieldRow[];

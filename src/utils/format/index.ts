@@ -68,8 +68,9 @@ class FormatUtil {
     return CHECK_TEXT[status];
   }
 
-  public journeyCode(id: number): string {
-    return `JRN-${String(id).padStart(3, '0')}`;
+  // Short, readable code from the UUID's random tail (its start is a timestamp)
+  public journeyCode(id: string): string {
+    return `JRN-${id.slice(-6).toUpperCase()}`;
   }
 
   public fileSize(bytes: number): string {

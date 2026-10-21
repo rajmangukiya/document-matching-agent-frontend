@@ -11,18 +11,18 @@ import Tag from '../../../common-components/tag';
 import { useAuth } from '../../../context/auth';
 import useRequest from '../../../hooks/use-request';
 import { toPath } from '../../../routes/paths';
-import templateService from '../../../services/template';
+import documentSkeletonService from '../../../services/document-skeleton';
 import { Permission } from '../../../types/permission';
 import errorUtil from '../../../utils/error';
 import formatUtil from '../../../utils/format';
-import SkeletonFormModal from '../components/skeleton-form-modal';
+import DocumentSkeletonFormModal from '../components/document-skeleton-form-modal';
 
-const SkeletonsPage = () => {
+const DocumentSkeletonsPage = () => {
   const { can } = useAuth();
   const navigate = useNavigate();
-  const templates = useRequest(() => templateService.list(), []);
+  const documentSkeletons = useRequest(() => documentSkeletonService.list(), []);
   const [createOpen, setCreateOpen] = useState(false);
-  const canManage = can(Permission.MANAGE_TEMPLATES);
+  const canManage = can(Permission.MANAGE_DOCUMENT_SKELETONS);
 
   return (
     <div>
@@ -32,11 +32,11 @@ const SkeletonsPage = () => {
         actions={canManage && <Button onClick={() => setCreateOpen(true)}>New skeleton</Button>}
       />
 
-      {templates.isLoading ? (
+      {documentSkeletons.isLoading ? (
         <Loader fullScreen />
-      ) : templates.error ? (
-        <Alert variant="error">{errorUtil.getMessage(templates.error)}</Alert>
-      ) : !templates.data?.length ? (
+      ) : documentSkeletons.error ? (
+        <Alert variant="error">{errorUtil.getMessage(documentSkeletons.error)}</Alert>
+      ) : !documentSkeletons.data?.length ? (
         <EmptyState
           title="No skeletons yet"
           description="Create a skeleton for each kind of document your journeys handle."
@@ -56,7 +56,7 @@ const SkeletonsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {templates.data.map((t) => (
+              {documentSkeletons.data.map((t) => (
                 <Tr key={t.id}>
                   <Td className="font-medium">{t.title}</Td>
                   <Td className="text-ink-70 font-mono text-[11.5px]">{t.documentType}</Td>
@@ -70,7 +70,7 @@ const SkeletonsPage = () => {
                     {t.journeyCount ? formatUtil.plural(t.journeyCount, 'journey') : 'Not used'}
                   </Td>
                   <Td className="text-right">
-                    <Link to={toPath.skeleton(t.id)}>
+                    <Link to={toPath.documentSkeleton(t.id)}>
                       <Button variant="secondary" size="sm">
                         Open
                       </Button>
@@ -83,16 +83,16 @@ const SkeletonsPage = () => {
         </Card>
       )}
 
-      <SkeletonFormModal
+      <DocumentSkeletonFormModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onSubmit={async (payload) => {
-          const created = await templateService.create(payload);
-          navigate(toPath.skeleton(created.id), { state: { tab: 'fields' } });
+          const created = await documentSkeletonService.create(payload);
+          navigate(toPath.documentSkeleton(created.id), { state: { tab: 'fields' } });
         }}
       />
     </div>
   );
 };
 
-export default SkeletonsPage;
+export default DocumentSkeletonsPage;

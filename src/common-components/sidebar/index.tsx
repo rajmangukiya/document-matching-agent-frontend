@@ -43,7 +43,7 @@ const Sidebar = () => {
           title: 'Workspace',
           items: [
             { to: PATHS.JOURNEYS, label: 'Journeys' },
-            { to: PATHS.SKELETONS, label: 'Document skeletons' },
+            { to: PATHS.DOCUMENT_SKELETONS, label: 'Document skeletons' },
           ],
         },
         {

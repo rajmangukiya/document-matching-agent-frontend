@@ -10,8 +10,8 @@ export const FIELD_TYPES: FieldType[] = [
   'party',
 ];
 
-export interface TemplateListItem {
-  id: number;
+export interface DocumentSkeletonListItem {
+  id: string;
   title: string;
   documentType: string;
   description: string | null;
@@ -21,15 +21,15 @@ export interface TemplateListItem {
 }
 
 export interface FieldMatch {
-  fieldId: number;
+  fieldId: string;
   fieldName: string;
-  templateId: number;
-  templateTitle: string;
+  documentSkeletonId: string;
+  documentSkeletonTitle: string;
 }
 
-export interface TemplateField {
-  id: number;
-  templateId: number;
+export interface DocumentSkeletonField {
+  id: string;
+  documentSkeletonId: string;
   name: string;
   type: FieldType;
   position: number;
@@ -37,22 +37,22 @@ export interface TemplateField {
   incomingCount: number;
 }
 
-export interface TemplateDetail {
-  id: number;
+export interface DocumentSkeletonDetail {
+  id: string;
   title: string;
   documentType: string;
   description: string | null;
-  fields: TemplateField[];
+  fields: DocumentSkeletonField[];
 }
 
 export interface MatchCandidate {
-  id: number;
+  id: string;
   title: string;
   documentType: string;
-  fields: { id: number; name: string; type: FieldType }[];
+  fields: { id: string; name: string; type: FieldType }[];
 }
 
-export interface TemplatePayload {
+export interface DocumentSkeletonPayload {
   title: string;
   documentType: string;
   description?: string | null;

@@ -11,14 +11,14 @@ export const PATHS = {
   JOURNEYS: '/journeys',
   JOURNEY: '/journeys/:id',
   DOCUMENT: '/documents/:id',
-  SKELETONS: '/skeletons',
-  SKELETON: '/skeletons/:id',
+  DOCUMENT_SKELETONS: '/document-skeletons',
+  DOCUMENT_SKELETON: '/document-skeletons/:id',
   USERS: '/users',
 } as const;
 
 export const toPath = {
-  adminCompany: (id: number) => `/admin/companies/${id}`,
-  journey: (id: number) => `/journeys/${id}`,
-  document: (id: number) => `/documents/${id}`,
-  skeleton: (id: number) => `/skeletons/${id}`,
+  adminCompany: (id: string) => `/admin/companies/${id}`,
+  journey: (id: string) => `/journeys/${id}`,
+  document: (id: string) => `/documents/${id}`,
+  documentSkeleton: (id: string) => `/document-skeletons/${id}`,
 };

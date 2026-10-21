@@ -3,7 +3,7 @@ import type { DocumentCounts, DocumentStatus } from '../document';
 export type JourneyStatus = 'draft' | 'in_progress' | 'complete';
 
 export interface JourneyListItem {
-  id: number;
+  id: string;
   title: string;
   description: string | null;
   segmentCount: number;
@@ -14,9 +14,9 @@ export interface JourneyListItem {
 }
 
 export interface DocumentSummary {
-  id: number;
-  segmentId: number;
-  templateId: number | null;
+  id: string;
+  segmentId: string;
+  documentSkeletonId: string | null;
   title: string;
   documentType: string;
   status: DocumentStatus;
@@ -25,15 +25,15 @@ export interface DocumentSummary {
 }
 
 export interface SegmentWithDocuments {
-  id: number;
-  journeyId: number;
+  id: string;
+  journeyId: string;
   name: string;
   position: number;
   documents: DocumentSummary[];
 }
 
 export interface JourneyDetail {
-  id: number;
+  id: string;
   title: string;
   description: string | null;
   createdAt: string;
